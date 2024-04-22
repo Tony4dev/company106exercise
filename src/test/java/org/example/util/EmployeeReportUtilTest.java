@@ -65,10 +65,10 @@ class EmployeeReportUtilTest {
         Employee employee2 = new Employee(2L, "", "", 0, 1L);
         Employee employee3 = new Employee(3L, "", "", 0, 2L);
         Employee employee4 = new Employee(4L, "", "", 0, 3L);
-
-        // WHEN
         Map<Long, Employee> allEmployeesById =
                 Map.of(1L, employee, 2L, employee2, 3L, employee3, 4L, employee4);
+
+        // WHEN
         int reportingLineLength1 = EmployeeReportUtil.getReportingLineLength(employee, allEmployeesById);
         int reportingLineLength2 = EmployeeReportUtil.getReportingLineLength(employee2, allEmployeesById);
         int reportingLineLength3 = EmployeeReportUtil.getReportingLineLength(employee3, allEmployeesById);
