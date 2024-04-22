@@ -18,7 +18,7 @@ public class EmployeeReportService {
     }
 
     public void printReport() {
-        Set<EmployeeReport> employeeReports = fetchData();
+        Set<EmployeeReport> employeeReports = createReports();
 
         printUnderpayedEmployees(employeeReports);
         printEmptyLine();
@@ -28,7 +28,7 @@ public class EmployeeReportService {
 
     }
 
-    private Set<EmployeeReport> fetchData() {
+    private Set<EmployeeReport> createReports() {
         return employees.values().stream()
                 .map(employee ->
                         new EmployeeReport(

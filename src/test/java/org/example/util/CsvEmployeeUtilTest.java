@@ -10,12 +10,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class CsvEmployeeUtilTest {
 
     @Test
-    void fetch() {
+    void fetchEmployees() {
         // GIVEN
         String file = CsvEmployeeUtilTest.class.getResource("/employees-test.csv").getFile();
 
         // WHEN
-        Map<Long, Employee> data = CsvEmployeeUtil.fetch(file);
+        Map<Long, Employee> data = CsvEmployeeUtil.fetchEmployees(file);
 
         // THEN
         assertEquals(2, data.values().size());

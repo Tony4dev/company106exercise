@@ -17,22 +17,22 @@ public class CsvEmployeeUtil {
     public static final int SALARY_COLUMN_INDEX = 3;
     public static final int MANAGER_ID_COLUMN_INDEX = 4;
 
-    public static Map<Long, Employee> fetch(String fileName) {
+    public static Map<Long, Employee> fetchEmployees(String csvFileName) {
         Map<Long, Employee> result = new HashMap<>();
-        try (Scanner scanner = new Scanner(new File(fileName))) {
+        try (Scanner scanner = new Scanner(new File(csvFileName))) {
             scanner.nextLine();
             while (scanner.hasNext())
             {
-                var employee = CsvEmployeeUtil.createEmployeeFromCsvLine(scanner.next());
+                var employee = CsvEmployeeUtil.createEmployee(scanner.next());
                 result.put(employee.id(), employee);
             }
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("File " + fileName + " not found", e);
+            throw new RuntimeException("File " + csvFileName + " not found", e);
         }
         return result;
     }
 
-    private static Employee createEmployeeFromCsvLine(String csvLine) {
+    private static Employee createEmployee(String csvLine) {
         String[] data = csvLine.split(CSV_COLUMN_SEPARATOR);
         long id = Long.parseLong(data[ID_COLUMN_INDEX]);
         String firstName = data[FIRST_NAME_COLUMN_INDEX];

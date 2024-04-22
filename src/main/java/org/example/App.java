@@ -12,7 +12,7 @@ public class App {
         if (args.length > 0) {
             fileName = args[0];
         }
-        var employees = CsvEmployeeUtil.fetch(fileName);
+        var employees = CsvEmployeeUtil.fetchEmployees(fileName);
         new EmployeeReportService(employees).printReport();
     }
 }
