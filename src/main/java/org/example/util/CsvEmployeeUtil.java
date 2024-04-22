@@ -20,7 +20,7 @@ public class CsvEmployeeUtil {
     public static Map<Long, Employee> fetchEmployees(String csvFileName) {
         Map<Long, Employee> result = new HashMap<>();
         try (Scanner scanner = new Scanner(new File(csvFileName))) {
-            scanner.nextLine();
+            skipCsvHeaderRow(scanner);
             while (scanner.hasNext())
             {
                 var employee = CsvEmployeeUtil.createEmployee(scanner.next());
@@ -30,6 +30,10 @@ public class CsvEmployeeUtil {
             throw new RuntimeException("File " + csvFileName + " not found", e);
         }
         return result;
+    }
+
+    private static void skipCsvHeaderRow(Scanner scanner) {
+        scanner.nextLine();
     }
 
     private static Employee createEmployee(String csvLine) {
