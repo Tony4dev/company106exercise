@@ -25,7 +25,6 @@ public class EmployeeReportService {
         printOverpayedEmployees(employeeReports);
         printEmptyLine();
         printEmployeesWithTooLongReportingLine(employeeReports);
-
     }
 
     private Set<EmployeeReport> createReports() {
@@ -70,7 +69,7 @@ public class EmployeeReportService {
     }
 
     private static void printEmployeesWithTooLongReportingLine(Set<EmployeeReport> employeeReports) {
-        System.out.println("Following managers have too long reporting line: ");
+        System.out.println("Following employees have too long reporting line: ");
 
         employeeReports.stream()
                 .filter(r -> r.reportingLineLength() > MAX_OPTIMAL_REPORTING_LINE_LENGTH)
