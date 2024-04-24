@@ -1,5 +1,6 @@
 package org.example.util;
 
+import org.example.exception.ApplicationException;
 import org.example.model.Employee;
 
 import java.io.File;
@@ -8,6 +9,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
+/**
+ * Provides utilities for employees fetch from csv file.
+ */
 public class CsvEmployeeUtil {
 
     public static final String CSV_COLUMN_SEPARATOR = ",";
@@ -17,19 +21,34 @@ public class CsvEmployeeUtil {
     public static final int SALARY_COLUMN_INDEX = 3;
     public static final int MANAGER_ID_COLUMN_INDEX = 4;
 
-    public static Map<Long, Employee> fetchEmployees(String csvFileName) {
+    /**
+     * fetches employees from given file
+     *
+     * @param csvFileNameOrPath       employees csv file name or path
+     * @return                        employees fetched in an id-employee map
+     */
+    public static Map<Long, Employee> fetchEmployees(String csvFileNameOrPath) {
         Map<Long, Employee> result = new HashMap<>();
-        try (Scanner scanner = new Scanner(new File(csvFileName))) {
+        try (Scanner scanner = new Scanner(new File(csvFileNameOrPath))) {
+            verifyNextRowExists(csvFileNameOrPath, scanner);
             skipCsvHeaderRow(scanner);
+            verifyNextRowExists(csvFileNameOrPath, scanner);
+
             while (scanner.hasNext())
             {
                 var employee = CsvEmployeeUtil.createEmployee(scanner.next());
                 result.put(employee.id(), employee);
             }
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("File " + csvFileName + " not found", e);
+            throw new ApplicationException("File " + csvFileNameOrPath + " not found", e);
         }
         return result;
+    }
+
+    private static void verifyNextRowExists(String csvFileNameOrPath, Scanner scanner) {
+        if (!scanner.hasNext()) {
+            throw new ApplicationException(String.format("File %s doesn't contain any data.", csvFileNameOrPath));
+        }
     }
 
     private static void skipCsvHeaderRow(Scanner scanner) {

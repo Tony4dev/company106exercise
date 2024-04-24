@@ -2,21 +2,34 @@ package org.example.service;
 
 import org.example.model.Employee;
 import org.example.model.EmployeeReport;
-import org.example.util.EmployeeReportUtil;
+import org.example.helper.EmployeeReportCalculationsHelper;
 
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Service that calculates values for an employees report and prints out the result.
+ */
 public class EmployeeReportService {
     public static final int MAX_OPTIMAL_REPORTING_LINE_LENGTH = 4;
 
     private final Map<Long, Employee> employees;
+    private final EmployeeReportCalculationsHelper calculationsHelper;
 
-    public EmployeeReportService(Map<Long, Employee> employees) {
+    /**
+     * Creates the service.
+     *
+     * @param employees     employees that should be included in report
+     */
+    public EmployeeReportService(Map<Long, Employee> employees, EmployeeReportCalculationsHelper calculationsHelper) {
         this.employees = employees;
+        this.calculationsHelper = calculationsHelper;
     }
 
+    /**
+     * creates report and prints it to the standard output.
+     */
     public void printReport() {
         Set<EmployeeReport> employeeReports = createReports();
 
@@ -32,15 +45,15 @@ public class EmployeeReportService {
                 .map(employee ->
                         new EmployeeReport(
                                 employee,
-                                EmployeeReportUtil.getOptimalSalaryDifference(employee, employees.values()),
-                                EmployeeReportUtil.getReportingLineLength(employee, employees)
+                                calculationsHelper.getOptimalSalaryDifference(employee, employees.values()),
+                                calculationsHelper.getReportingLineLength(employee, employees)
                         )
                 )
                 .collect(Collectors.toSet());
     }
 
     private static void printUnderpayedEmployees(Set<EmployeeReport> employeeReports) {
-        System.out.println("Following managers should earn more: ");
+        System.out.println("Following managers should earn more:");
         employeeReports.stream()
                 .filter(r -> r.optimalPayDifference() < 0)
                 .forEach(
@@ -54,7 +67,7 @@ public class EmployeeReportService {
     }
 
     private static void printOverpayedEmployees(Set<EmployeeReport> employeeReports) {
-        System.out.println("Following managers should earn less: ");
+        System.out.println("Following managers should earn less:");
 
         employeeReports.stream()
                 .filter(r -> r.optimalPayDifference() > 0)
@@ -69,7 +82,7 @@ public class EmployeeReportService {
     }
 
     private static void printEmployeesWithTooLongReportingLine(Set<EmployeeReport> employeeReports) {
-        System.out.println("Following employees have too long reporting line: ");
+        System.out.println("Following employees have too long reporting line:");
 
         employeeReports.stream()
                 .filter(r -> r.reportingLineLength() > MAX_OPTIMAL_REPORTING_LINE_LENGTH)

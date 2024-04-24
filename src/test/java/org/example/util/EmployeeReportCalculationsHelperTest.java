@@ -1,5 +1,6 @@
 package org.example.util;
 
+import org.example.helper.EmployeeReportCalculationsHelper;
 import org.example.model.Employee;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -9,7 +10,9 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class EmployeeReportUtilTest {
+class EmployeeReportCalculationsHelperTest {
+
+    private final EmployeeReportCalculationsHelper calculationsHelper = new EmployeeReportCalculationsHelper();
 
     @Test
     void getOptimalSalaryDifference_theManagerIsUnderpayed() {
@@ -20,7 +23,7 @@ class EmployeeReportUtilTest {
 
         // WHEN
         double actualOptimalSalaryDifference =
-                EmployeeReportUtil.getOptimalSalaryDifference(manager, Set.of(manager, employee2, employee3));
+                calculationsHelper.getOptimalSalaryDifference(manager, Set.of(manager, employee2, employee3));
 
         // THEN
         Assertions.assertEquals(-20.0, actualOptimalSalaryDifference);
@@ -36,7 +39,7 @@ class EmployeeReportUtilTest {
 
         // WHEN
         double actualOptimalSalaryDifference =
-                EmployeeReportUtil.getOptimalSalaryDifference(manager, Set.of(manager, employee2, employee3));
+                calculationsHelper.getOptimalSalaryDifference(manager, Set.of(manager, employee2, employee3));
 
         // THEN
         Assertions.assertEquals(50.0, actualOptimalSalaryDifference);
@@ -52,7 +55,7 @@ class EmployeeReportUtilTest {
 
         // WHEN
         double actualOptimalSalaryDifference =
-                EmployeeReportUtil.getOptimalSalaryDifference(manager, Set.of(manager, employee2, employee3));
+                calculationsHelper.getOptimalSalaryDifference(manager, Set.of(manager, employee2, employee3));
 
         // THEN
         assertEquals(0.0, actualOptimalSalaryDifference);
@@ -69,10 +72,10 @@ class EmployeeReportUtilTest {
                 Map.of(1L, employee, 2L, employee2, 3L, employee3, 4L, employee4);
 
         // WHEN
-        int reportingLineLength1 = EmployeeReportUtil.getReportingLineLength(employee, allEmployeesById);
-        int reportingLineLength2 = EmployeeReportUtil.getReportingLineLength(employee2, allEmployeesById);
-        int reportingLineLength3 = EmployeeReportUtil.getReportingLineLength(employee3, allEmployeesById);
-        int reportingLineLength4 = EmployeeReportUtil.getReportingLineLength(employee4, allEmployeesById);
+        int reportingLineLength1 = calculationsHelper.getReportingLineLength(employee, allEmployeesById);
+        int reportingLineLength2 = calculationsHelper.getReportingLineLength(employee2, allEmployeesById);
+        int reportingLineLength3 = calculationsHelper.getReportingLineLength(employee3, allEmployeesById);
+        int reportingLineLength4 = calculationsHelper.getReportingLineLength(employee4, allEmployeesById);
 
         // THEN
         assertEquals(0, reportingLineLength1);

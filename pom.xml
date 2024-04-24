@@ -19,7 +19,7 @@
   <dependencies>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
+      <artifactId>junit-jupiter</artifactId>
       <version>5.9.2</version>
       <scope>test</scope>
     </dependency>
@@ -36,6 +36,14 @@
               <mainClass>org.example.App</mainClass>
             </manifest>
           </archive>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.1.0</version>
+        <configuration>
+          <mainClass>org.example.App</mainClass>
         </configuration>
       </plugin>
     </plugins>
