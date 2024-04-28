@@ -1,11 +1,14 @@
 package org.example.util;
 
+import org.example.exception.ApplicationException;
 import org.example.model.Employee;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class CsvEmployeeUtilTest {
 
@@ -27,5 +30,36 @@ class CsvEmployeeUtilTest {
 
         assertEquals(data.get(joeDoeId), joeDoe);
         assertEquals(data.get(martinChekovId), martinChekov);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"/employees-test-invalid-id.csv", "/employees-test-invalid-manager-id.csv", "/employees-test-invalid-salary.csv"})
+    void fetchEmployees_numberFormatIsWrong(String fileName) {
+        // GIVEN
+        String file = CsvEmployeeUtilTest.class.getResource(fileName).getFile();
+
+        // WHEN
+        ApplicationException exception = assertThrows(ApplicationException.class,
+                () -> CsvEmployeeUtil.fetchEmployees(file));
+
+        // THEN
+        String expectedMessageStart = "Invalid number on line";
+        assertTrue(exception.getMessage().startsWith(expectedMessageStart));
+    }
+
+
+    @Test
+    void fetchEmployees_numberFormatIsWrong() {
+        // GIVEN
+        String file = CsvEmployeeUtilTest.class
+                .getResource("/employees-test-invalid-number-of-columns.csv").getFile();
+
+        // WHEN
+        ApplicationException exception = assertThrows(ApplicationException.class,
+                () -> CsvEmployeeUtil.fetchEmployees(file));
+
+        // THEN
+        String expectedMessageStart = "Invalid format of line";
+        assertTrue(exception.getMessage().startsWith(expectedMessageStart));
     }
 }
