@@ -47,7 +47,7 @@ public class EmployeeReportCalculationsHelper {
     public int getReportingLineLength(Employee employee, Map<Long, Employee> allEmployeesById) {
         var currentEmployeeInLine = employee;
         var result = 0;
-        while (currentEmployeeInLine.managerId() != null) {
+        while (currentEmployeeInLine != null && currentEmployeeInLine.managerId() != null) {
             currentEmployeeInLine = allEmployeesById.get(currentEmployeeInLine.managerId());
             result++;
         }
@@ -55,6 +55,9 @@ public class EmployeeReportCalculationsHelper {
     }
 
     private static double getAverageSalary(Set<Employee> employeesSet) {
+        if (employeesSet.isEmpty()) {
+            return 0;
+        }
         double sumOfSalaries = employeesSet.stream().map(Employee::salary).reduce(0.0, Double::sum);
         return sumOfSalaries / employeesSet.size();
     }

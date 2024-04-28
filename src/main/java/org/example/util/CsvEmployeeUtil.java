@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Scanner;
 
 /**
@@ -36,8 +37,11 @@ public class CsvEmployeeUtil {
 
             while (scanner.hasNext())
             {
-                var employee = CsvEmployeeUtil.createEmployee(scanner.next());
-                result.put(employee.id(), employee);
+                var employeeOptional = CsvEmployeeUtil.createEmployee(scanner.next());
+                if (employeeOptional.isPresent()) {
+                    var employee = employeeOptional.get();
+                    result.put(employee.id(), employee);
+                }
             }
         } catch (FileNotFoundException e) {
             throw new ApplicationException("File " + csvFileNameOrPath + " not found", e);
@@ -55,19 +59,28 @@ public class CsvEmployeeUtil {
         scanner.nextLine();
     }
 
-    private static Employee createEmployee(String csvLine) {
-        String[] data = csvLine.split(CSV_COLUMN_SEPARATOR);
-        long id = Long.parseLong(data[ID_COLUMN_INDEX]);
-        String firstName = data[FIRST_NAME_COLUMN_INDEX];
-        String lastName = data[LAST_NAME_COLUMN_INDEX];
-        double salary = Double.parseDouble(data[SALARY_COLUMN_INDEX]);
-
-        Long managerId = null;
-        if (data.length > MANAGER_ID_COLUMN_INDEX) {
-            managerId = Long.parseLong(data[MANAGER_ID_COLUMN_INDEX]);
+    private static Optional<Employee> createEmployee(String csvLine) {
+        if (csvLine == null) {
+            return Optional.empty();
         }
+        try {
+            String[] data = csvLine.split(CSV_COLUMN_SEPARATOR);
+            long id = Long.parseLong(data[ID_COLUMN_INDEX]);
+            String firstName = data[FIRST_NAME_COLUMN_INDEX];
+            String lastName = data[LAST_NAME_COLUMN_INDEX];
+            double salary = Double.parseDouble(data[SALARY_COLUMN_INDEX]);
 
-        return new Employee(id, firstName, lastName, salary, managerId);
+            Long managerId = null;
+            if (data.length > MANAGER_ID_COLUMN_INDEX) {
+                managerId = Long.parseLong(data[MANAGER_ID_COLUMN_INDEX]);
+            }
+
+            return Optional.of(new Employee(id, firstName, lastName, salary, managerId));
+        } catch (NumberFormatException e) {
+            throw new ApplicationException(String.format("Invalid number on line \"%s\".", csvLine), e);
+        } catch (IndexOutOfBoundsException e) {
+            throw new ApplicationException(String.format("Invalid format of line \"%s\".", csvLine), e);
+        }
     }
 
     private CsvEmployeeUtil() {
